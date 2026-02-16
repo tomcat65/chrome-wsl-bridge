@@ -1,0 +1,15 @@
+# Agent memory (contains local paths and session data)
+.claude/
+
+# SPECTRA build logs (contain local paths)
+.spectra/logs/
+
+# OS / editor artifacts
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Backup artifacts
+*.bak

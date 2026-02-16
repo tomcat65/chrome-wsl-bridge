@@ -19,7 +19,7 @@ All 9 tasks (000-008) pass verification. The bridge chain is fully functional: C
 
 ### Step 1: Verify Command
 - Command: `test -x scripts/backup-snapshot.sh && bash scripts/backup-snapshot.sh 2>&1 | grep -q "Backup created"`
-- Output: "Backup created: /home/tomcat65/.claude/chrome/backup-20260215-203057" (and file count)
+- Output: "Backup created: ~/.claude/chrome/backup-20260215-203057" (and file count)
 - Status: PASS
 
 ### Step 2: Regression
@@ -27,7 +27,7 @@ All 9 tasks (000-008) pass verification. The bridge chain is fully functional: C
 - Status: PASS
 
 ### Step 3: Evidence Chain
-- Script exists at `/home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/backup-snapshot.sh`
+- Script exists at `~/projects/dev/chrome-wsl-bridge/scripts/backup-snapshot.sh`
 - Is executable (`-rwxr-xr-x`)
 - Build report: task-000-build.md confirms completion
 - Status: PASS
@@ -64,8 +64,8 @@ All 9 tasks (000-008) pass verification. The bridge chain is fully functional: C
 - Status: PASS
 
 ### Step 3: Evidence Chain
-- Script at `/home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/version-wrapper.sh` (executable)
-- Generated wrapper at `/home/tomcat65/.claude/chrome/chrome-native-host` (executable, `#!/bin/sh` shebang)
+- Script at `~/projects/dev/chrome-wsl-bridge/scripts/version-wrapper.sh` (executable)
+- Generated wrapper at `~/.claude/chrome/chrome-native-host` (executable, `#!/bin/sh` shebang)
 - Build report: task-001-build.md confirms completion
 - Status: PASS
 
@@ -99,7 +99,7 @@ All 9 tasks (000-008) pass verification. The bridge chain is fully functional: C
 **Result:** PASS
 
 ### Step 1: Verify Command
-- Command: `test -x scripts/generate-bat.sh && file /mnt/c/Users/TOMAS/.claude/chrome/chrome-native-host.bat | grep -q "CRLF"`
+- Command: `test -x scripts/generate-bat.sh && file /mnt/c/Users/$WIN_USER/.claude/chrome/chrome-native-host.bat | grep -q "CRLF"`
 - Output: Script is executable; .bat confirmed as "DOS batch file, ASCII text, with CRLF line terminators"
 - Status: PASS
 
@@ -108,8 +108,8 @@ All 9 tasks (000-008) pass verification. The bridge chain is fully functional: C
 - Status: PASS
 
 ### Step 3: Evidence Chain
-- Script at `/home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/generate-bat.sh` (executable)
-- .bat at `/mnt/c/Users/TOMAS/.claude/chrome/chrome-native-host.bat` with CRLF
+- Script at `~/projects/dev/chrome-wsl-bridge/scripts/generate-bat.sh` (executable)
+- .bat at `/mnt/c/Users/$WIN_USER/.claude/chrome/chrome-native-host.bat` with CRLF
 - Build report: task-002-build.md confirms completion
 - Status: PASS
 
@@ -146,7 +146,7 @@ All 9 tasks (000-008) pass verification. The bridge chain is fully functional: C
 - Status: PASS
 
 ### Step 3: Evidence Chain
-- Script at `/home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/backup-integrity.sh` (executable)
+- Script at `~/projects/dev/chrome-wsl-bridge/scripts/backup-integrity.sh` (executable)
 - Checksum file at `~/.claude/chrome/bridge-checksums.sha256`
 - Build report: task-003-build.md confirms completion
 - Status: PASS
@@ -184,7 +184,7 @@ All 9 tasks (000-008) pass verification. The bridge chain is fully functional: C
 - Status: PASS
 
 ### Step 3: Evidence Chain
-- Script at `/home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/registry-guard.sh` (executable)
+- Script at `~/projects/dev/chrome-wsl-bridge/scripts/registry-guard.sh` (executable)
 - Build report: task-004-build.md confirms completion
 - Status: PASS
 
@@ -223,7 +223,7 @@ All 9 tasks (000-008) pass verification. The bridge chain is fully functional: C
 - Status: PASS
 
 ### Step 3: Evidence Chain
-- Script at `/home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/chrome-wsl-health.sh` (executable)
+- Script at `~/projects/dev/chrome-wsl-bridge/scripts/chrome-wsl-health.sh` (executable)
 - No build report (tasks 005-008 not logged in .spectra/logs but scripts are present and functional)
 - Status: PASS
 
@@ -273,7 +273,7 @@ All 9 tasks (000-008) pass verification. The bridge chain is fully functional: C
 - Status: PASS
 
 ### Step 3: Evidence Chain
-- Script at `/home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/test-resilience.sh` (executable)
+- Script at `~/projects/dev/chrome-wsl-bridge/scripts/test-resilience.sh` (executable)
 - Status: PASS
 
 ### Step 4: Wiring Proof
@@ -348,8 +348,8 @@ All 9 tasks (000-008) pass verification. The bridge chain is fully functional: C
 - Status: PASS
 
 ### Step 3: Evidence Chain
-- SKILL.md at `/home/tomcat65/.claude/skills/chrome-wsl/SKILL.md` (updated)
-- SKILL.md.bak backup exists at `/home/tomcat65/.claude/skills/chrome-wsl/SKILL.md.bak`
+- SKILL.md at `~/.claude/skills/chrome-wsl/SKILL.md` (updated)
+- SKILL.md.bak backup exists at `~/.claude/skills/chrome-wsl/SKILL.md.bak`
 - Status: PASS
 
 ### Step 4: Wiring Proof

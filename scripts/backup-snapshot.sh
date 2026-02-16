@@ -6,7 +6,11 @@
 set -euo pipefail
 
 WSL_CHROME_DIR="$HOME/.claude/chrome"
-WIN_USER="TOMAS"
+WIN_USER=$(cmd.exe /c "echo %USERNAME%" 2>/dev/null | tr -d '\r\n')
+if [ -z "$WIN_USER" ]; then
+    echo "Error: Could not detect Windows username" >&2
+    exit 1
+fi
 WIN_CHROME_DIR="/mnt/c/Users/${WIN_USER}/.claude/chrome"
 
 # Registry key paths

@@ -20,8 +20,8 @@ The plan has significant structural and execution flaws that will cause predicta
 **Issue:** Both Task 001 and Task 002 have verify commands that call the scripts with flags (`--dry-run`, `--check`) that the scripts themselves must implement, creating a circular dependency.
 
 **Evidence:**
-- Task 001 verify: `bash /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/version-wrapper.sh --dry-run`
-- Task 002 verify: `bash /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/generate-bat.sh --check`
+- Task 001 verify: `bash ~/projects/dev/chrome-wsl-bridge/scripts/version-wrapper.sh --dry-run`
+- Task 002 verify: `bash ~/projects/dev/chrome-wsl-bridge/scripts/generate-bat.sh --check`
 
 **Problem:** The verify command runs BEFORE the builder has written the script. The script doesn't exist yet. Even if it did, these flags are acceptance criteria features, not verify prerequisites.
 
@@ -31,7 +31,7 @@ The plan has significant structural and execution flaws that will cause predicta
 
 **Fix Required:** Verify commands must check existence and basic executability, not feature completeness. Example:
 ```bash
-test -x /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/version-wrapper.sh && exit 0 || exit 1
+test -x ~/projects/dev/chrome-wsl-bridge/scripts/version-wrapper.sh && exit 0 || exit 1
 ```
 
 ---
@@ -193,7 +193,7 @@ file chrome-native-host.bat | grep -q "CRLF" || { echo "FAIL: Missing CRLF"; exi
 
 Task 008's verify command is:
 ```bash
-bash /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/chrome-wsl-health.sh && echo "INTEGRATION PASS" && exit 0 || exit 1
+bash ~/projects/dev/chrome-wsl-bridge/scripts/chrome-wsl-health.sh && echo "INTEGRATION PASS" && exit 0 || exit 1
 ```
 
 This only proves the health check script runs. It doesn't prove the bridge ACTUALLY WORKS end-to-end. A real integration test would:
@@ -210,7 +210,7 @@ This only proves the health check script runs. It doesn't prove the bridge ACTUA
 ### Warning 2: No Task Validates SKILL.md References Are Correct
 
 Task 007 updates SKILL.md to reference scripts at:
-> `/home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/`
+> `~/projects/dev/chrome-wsl-bridge/scripts/`
 
 But what if this project is cloned to a different path? The skill will break.
 
@@ -262,7 +262,7 @@ Discovery.md Risk #9:
 
 Plan Task 001 addresses dynamic version detection, but doesn't address cleanup of orphaned version directories.
 
-**Gap:** If `/home/tomcat65/.local/share/claude/versions/2.1.35/` exists but is no longer used, it wastes disk space. If it's deleted WHILE the wrapper is using it, the bridge breaks mid-session.
+**Gap:** If `~/.local/share/claude/versions/2.1.35/` exists but is no longer used, it wastes disk space. If it's deleted WHILE the wrapper is using it, the bridge breaks mid-session.
 
 **Recommendation:** Add a subtask to Task 001 or a new Task 009: "Orphaned version cleanup script that warns about unused versions but doesn't delete them (requires user confirmation)."
 

@@ -34,11 +34,11 @@ Chrome Extension (Windows)
   └─ Falls back to: com.anthropic.claude_code_browser_extension (Code)
       ↓ Registry lookup finds manifest
       ↓ Manifest points to .bat bridge
-  /mnt/c/Users/TOMAS/.claude/chrome/chrome-native-host.bat
+  /mnt/c/Users/$WIN_USER/.claude/chrome/chrome-native-host.bat
       ↓ wsl.exe --exec (crosses Windows/WSL boundary)
-  /home/tomcat65/.claude/chrome/chrome-native-host (wrapper shell script)
+  ~/.claude/chrome/chrome-native-host (wrapper shell script)
       ↓ Wrapper calls versioned binary
-  /home/tomcat65/.local/share/claude/versions/2.1.37 (Claude Code binary)
+  ~/.local/share/claude/versions/2.1.37 (Claude Code binary)
       ↓ Native host mode (--chrome-native-host flag)
   Claude Code native host process (handles MCP requests)
 ```
@@ -48,13 +48,13 @@ Chrome Extension (Windows)
 | Component | Path | Status | Evidence |
 |-----------|------|--------|----------|
 | WSL native host wrapper | `~/.claude/chrome/chrome-native-host` | ✓ EXISTS | Calls `2.1.37` correctly |
-| Windows .bat bridge | `/mnt/c/Users/TOMAS/.claude/chrome/chrome-native-host.bat` | ✓ EXISTS + CRLF | Verified via `file` + hex dump |
-| Code manifest | `/mnt/c/Users/TOMAS/.claude/chrome/com.anthropic.claude_code_browser_extension.json` | ✓ VALID | Path matches .bat |
-| Desktop-override manifest | `/mnt/c/Users/TOMAS/.claude/chrome/com.anthropic.claude_browser_extension.json` | ✓ VALID | Points to bridge .bat |
+| Windows .bat bridge | `/mnt/c/Users/$WIN_USER/.claude/chrome/chrome-native-host.bat` | ✓ EXISTS + CRLF | Verified via `file` + hex dump |
+| Code manifest | `/mnt/c/Users/$WIN_USER/.claude/chrome/com.anthropic.claude_code_browser_extension.json` | ✓ VALID | Path matches .bat |
+| Desktop-override manifest | `/mnt/c/Users/$WIN_USER/.claude/chrome/com.anthropic.claude_browser_extension.json` | ✓ VALID | Points to bridge .bat |
 | Desktop backup | `~/.claude/chrome/desktop-native-host-original.txt` | ✓ EXISTS | Contains original registry path |
 | Registry (Code) | `HKCU\...\com.anthropic.claude_code_browser_extension` | ✓ CORRECT | Points to Code manifest |
 | Registry (Desktop) | `HKCU\...\com.anthropic.claude_browser_extension` | ✓ ACTIVE | Points to bridge manifest (Code mode) |
-| Bridge log | `/mnt/c/Users/TOMAS/.claude/chrome/bridge.log` | ✓ RECENT | Invoked Feb 15 19:10 |
+| Bridge log | `/mnt/c/Users/$WIN_USER/.claude/chrome/bridge.log` | ✓ RECENT | Invoked Feb 15 19:10 |
 | Native host connectivity | Via stdio test | ✓ RESPONDS | Socket created, MCP responds |
 
 ---
@@ -69,7 +69,7 @@ Chrome Extension (Windows)
 | 4 | Desktop backup file has no integrity check (no checksum/signature) | Data Integrity | MEDIUM | YES | Corrupted backup prevents restore to Desktop mode |
 | 5 | Bridge failures invisible to user; only discovered on use attempt | Monitoring | MEDIUM | YES | Unknown downtime, lost productivity |
 | 6 | No automated self-repair; requires manual `chrome-wsl repair` invocation | Operational | MEDIUM | YES | User must diagnose and repair manually |
-| 7 | WSL distro path hardcoded (/home/tomcat65); changes break bridge | Path Management | LOW | NO | Low risk (WSL config stable after setup) |
+| 7 | WSL distro path hardcoded ($HOME); changes break bridge | Path Management | LOW | NO | Low risk (WSL config stable after setup) |
 | 8 | Extension IDs hardcoded; extension replacement would break manifests | Extension Stability | LOW | NO | Very low risk (official extension IDs stable) |
 | 9 | Version directory deleted without cleanup leaves broken symlink | Cleanup | MEDIUM | YES | Old version garbage causes silent failures |
 | 10 | bridge.log grows indefinitely; no rotation mechanism | Log Management | LOW | NO | Cosmetic (growth rate is 6 entries/day) |
@@ -102,7 +102,7 @@ Requires: Health check daemon, auto-repair triggers, log rotation
 
 ### Skill: `chrome-wsl` (SKILL.md)
 
-**Location:** `/home/tomcat65/.claude/skills/chrome-wsl/SKILL.md`
+**Location:** `~/.claude/skills/chrome-wsl/SKILL.md`
 
 **Capabilities:**
 - `setup` — Full first-time bridge configuration (creates .bat, manifests, registry entries, backup)
@@ -127,7 +127,7 @@ Requires: Health check daemon, auto-repair triggers, log rotation
 
 ### Bridge Log
 
-**Location:** `/mnt/c/Users/TOMAS/.claude/chrome/bridge.log`
+**Location:** `/mnt/c/Users/$WIN_USER/.claude/chrome/bridge.log`
 
 **Current State:**
 - 12 invocations logged

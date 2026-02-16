@@ -128,9 +128,9 @@ EOF
 {
   "name": "com.anthropic.claude_code_browser_extension",
   "description": "Mock Code manifest",
-  "path": "C:\\\\Users\\\\TOMAS\\\\.claude\\\\chrome\\\\chrome-native-host.bat",
+  "path": "C:\\\\Users\\\\TESTUSER\\\\.claude\\\\chrome\\\\chrome-native-host.bat",
   "type": "stdio",
-  "allowed_origins": ["chrome-extension://fcoeoabgfenejglbffodgkkbkcdhcgfn/"]
+  "allowed_origins": ["chrome-extension://mock-extension-id/"]
 }
 MEOF
 
@@ -138,9 +138,9 @@ MEOF
 {
   "name": "com.anthropic.claude_browser_extension",
   "description": "Mock Desktop-override manifest",
-  "path": "C:\\\\Users\\\\TOMAS\\\\.claude\\\\chrome\\\\chrome-native-host.bat",
+  "path": "C:\\\\Users\\\\TESTUSER\\\\.claude\\\\chrome\\\\chrome-native-host.bat",
   "type": "stdio",
-  "allowed_origins": ["chrome-extension://dihbgbndebgnbjfmelmegjepbnkhlgni/"]
+  "allowed_origins": ["chrome-extension://mock-extension-id-desktop/"]
 }
 MEOF
 

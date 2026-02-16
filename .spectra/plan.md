@@ -21,14 +21,14 @@
   - Running with `--restore [dir]` restores all files from a backup directory and re-imports the registry
   - Exit code 0 on success, 1 on failure
 - Files: scripts/backup-snapshot.sh
-- Verify: `test -x /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/backup-snapshot.sh && bash /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/backup-snapshot.sh 2>&1 | grep -q "Backup created" && exit 0 || exit 1`
+- Verify: `test -x ~/projects/dev/chrome-wsl-bridge/scripts/backup-snapshot.sh && bash ~/projects/dev/chrome-wsl-bridge/scripts/backup-snapshot.sh 2>&1 | grep -q "Backup created" && exit 0 || exit 1`
 - Risk: low
 - Max-iterations: 3
 - Scope: code
 - File-ownership:
   - owns: [scripts/backup-snapshot.sh]
   - touches: []
-  - reads: [~/.claude/chrome/chrome-native-host, ~/.claude/chrome/desktop-native-host-original.txt, /mnt/c/Users/TOMAS/.claude/chrome/chrome-native-host.bat, /mnt/c/Users/TOMAS/.claude/chrome/com.anthropic.claude_code_browser_extension.json, /mnt/c/Users/TOMAS/.claude/chrome/com.anthropic.claude_browser_extension.json]
+  - reads: [~/.claude/chrome/chrome-native-host, ~/.claude/chrome/desktop-native-host-original.txt, /mnt/c/Users/$WIN_USER/.claude/chrome/chrome-native-host.bat, /mnt/c/Users/$WIN_USER/.claude/chrome/com.anthropic.claude_code_browser_extension.json, /mnt/c/Users/$WIN_USER/.claude/chrome/com.anthropic.claude_browser_extension.json]
 - Wiring-proof:
   - CLI: `bash scripts/backup-snapshot.sh` creates snapshot; `bash scripts/backup-snapshot.sh --restore <dir>` restores
   - Integration: Provides rollback safety net before Tasks 001-004 modify bridge files
@@ -49,7 +49,7 @@
   - A backup of the original wrapper is saved to `~/.claude/chrome/chrome-native-host.bak` before replacement
   - Running with `--dry-run` prints detected version without modifying anything
 - Files: scripts/version-wrapper.sh, ~/.claude/chrome/chrome-native-host, ~/.claude/chrome/last-known-version.txt
-- Verify: `test -x /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/version-wrapper.sh && test -f /home/tomcat65/.claude/chrome/chrome-native-host && exit 0 || exit 1`
+- Verify: `test -x ~/projects/dev/chrome-wsl-bridge/scripts/version-wrapper.sh && test -f ~/.claude/chrome/chrome-native-host && exit 0 || exit 1`
 - Risk: high
 - Max-iterations: 5
 - Scope: code
@@ -74,14 +74,14 @@
   - The generator auto-detects WIN_USER via `cmd.exe /c "echo %USERNAME%"` and WSL_HOME from `$HOME`
   - Running with `--check` validates an existing .bat file's CRLF without overwriting
   - A backup of the original .bat is saved to `chrome-native-host.bat.bak` before replacement
-- Files: scripts/generate-bat.sh, /mnt/c/Users/TOMAS/.claude/chrome/chrome-native-host.bat
-- Verify: `test -x /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/generate-bat.sh && file /mnt/c/Users/TOMAS/.claude/chrome/chrome-native-host.bat | grep -q "CRLF" && exit 0 || exit 1`
+- Files: scripts/generate-bat.sh, /mnt/c/Users/$WIN_USER/.claude/chrome/chrome-native-host.bat
+- Verify: `test -x ~/projects/dev/chrome-wsl-bridge/scripts/generate-bat.sh && file /mnt/c/Users/$WIN_USER/.claude/chrome/chrome-native-host.bat | grep -q "CRLF" && exit 0 || exit 1`
 - Risk: high
 - Max-iterations: 5
 - Scope: code
 - File-ownership:
   - owns: [scripts/generate-bat.sh]
-  - touches: [/mnt/c/Users/TOMAS/.claude/chrome/chrome-native-host.bat]
+  - touches: [/mnt/c/Users/$WIN_USER/.claude/chrome/chrome-native-host.bat]
   - reads: []
 - Wiring-proof:
   - CLI: `bash scripts/generate-bat.sh --check` validates CRLF; `bash scripts/generate-bat.sh` regenerates with CRLF guarantee
@@ -103,14 +103,14 @@
   - If the checksum file itself is missing, `--verify` exits code 2 and prints "No checksums found. Run --init first."
   - Running with no arguments defaults to `--verify`
 - Files: scripts/backup-integrity.sh, ~/.claude/chrome/bridge-checksums.sha256
-- Verify: `test -x /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/backup-integrity.sh && bash /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/backup-integrity.sh --init && bash /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/backup-integrity.sh --verify && exit 0 || exit 1`
+- Verify: `test -x ~/projects/dev/chrome-wsl-bridge/scripts/backup-integrity.sh && bash ~/projects/dev/chrome-wsl-bridge/scripts/backup-integrity.sh --init && bash ~/projects/dev/chrome-wsl-bridge/scripts/backup-integrity.sh --verify && exit 0 || exit 1`
 - Risk: medium
 - Max-iterations: 5
 - Scope: code
 - File-ownership:
   - owns: [scripts/backup-integrity.sh, ~/.claude/chrome/bridge-checksums.sha256]
   - touches: []
-  - reads: [~/.claude/chrome/desktop-native-host-original.txt, ~/.claude/chrome/chrome-native-host, /mnt/c/Users/TOMAS/.claude/chrome/com.anthropic.claude_code_browser_extension.json, /mnt/c/Users/TOMAS/.claude/chrome/com.anthropic.claude_browser_extension.json]
+  - reads: [~/.claude/chrome/desktop-native-host-original.txt, ~/.claude/chrome/chrome-native-host, /mnt/c/Users/$WIN_USER/.claude/chrome/com.anthropic.claude_code_browser_extension.json, /mnt/c/Users/$WIN_USER/.claude/chrome/com.anthropic.claude_browser_extension.json]
 - Wiring-proof:
   - CLI: `bash scripts/backup-integrity.sh --init` creates checksums; `bash scripts/backup-integrity.sh --verify` validates
   - Integration: Health check (Task 005) calls `--verify` as one of its diagnostic steps
@@ -132,7 +132,7 @@
   - Validates backup file is non-empty before any operation
   - Exit code 0 means registry matches intent; exit code 1 means mismatch detected (or repair failed)
 - Files: scripts/registry-guard.sh, ~/.claude/chrome/repair.log, ~/.claude/chrome/mode-intent.txt
-- Verify: `test -x /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/registry-guard.sh && bash /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/registry-guard.sh --check 2>&1 | grep -qE "(CODE_MODE|DESKTOP_MODE|UNKNOWN)" && exit 0 || exit 1`
+- Verify: `test -x ~/projects/dev/chrome-wsl-bridge/scripts/registry-guard.sh && bash ~/projects/dev/chrome-wsl-bridge/scripts/registry-guard.sh --check 2>&1 | grep -qE "(CODE_MODE|DESKTOP_MODE|UNKNOWN)" && exit 0 || exit 1`
 - Risk: medium
 - Max-iterations: 5
 - Scope: code
@@ -159,7 +159,7 @@
   - If any repair script fails, health check logs the failure, continues with remaining repairs (best-effort), then reports final status
   - Completes in under 10 seconds (measured via `time`)
 - Files: scripts/chrome-wsl-health.sh
-- Verify: `test -x /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/chrome-wsl-health.sh && bash /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/chrome-wsl-health.sh --quiet 2>&1 | grep -qE "^(HEALTHY|DEGRADED|BROKEN)" && exit 0 || exit 1`
+- Verify: `test -x ~/projects/dev/chrome-wsl-bridge/scripts/chrome-wsl-health.sh && bash ~/projects/dev/chrome-wsl-bridge/scripts/chrome-wsl-health.sh --quiet 2>&1 | grep -qE "^(HEALTHY|DEGRADED|BROKEN)" && exit 0 || exit 1`
 - Risk: medium
 - Max-iterations: 8
 - Scope: code
@@ -186,7 +186,7 @@
   - Exit code 0 if ALL pass, 1 if any fail; per-test PASS/FAIL output
   - Requires `--confirm` flag to actually run (no accidental execution)
 - Files: scripts/test-resilience.sh
-- Verify: `test -x /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/test-resilience.sh && bash /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/test-resilience.sh --dry-run 2>&1 | grep -q "Test cases:" && exit 0 || exit 1`
+- Verify: `test -x ~/projects/dev/chrome-wsl-bridge/scripts/test-resilience.sh && bash ~/projects/dev/chrome-wsl-bridge/scripts/test-resilience.sh --dry-run 2>&1 | grep -q "Test cases:" && exit 0 || exit 1`
 - Risk: medium (isolated, not high)
 - Max-iterations: 8
 - Scope: code
@@ -213,7 +213,7 @@
   - `bridge-checksums.sha256` exists and `--verify` passes
   - `test-resilience.sh --dry-run` succeeds
 - Files: (integration -- no new files)
-- Verify: `bash /home/tomcat65/projects/dev/chrome-wsl-bridge/scripts/chrome-wsl-health.sh && echo "INTEGRATION PASS" && exit 0 || exit 1`
+- Verify: `bash ~/projects/dev/chrome-wsl-bridge/scripts/chrome-wsl-health.sh && echo "INTEGRATION PASS" && exit 0 || exit 1`
 - Risk: low
 - Max-iterations: 3
 - Scope: code
@@ -242,7 +242,7 @@
   - Scripts referenced via `CHROME_WSL_BRIDGE_HOME` env var with fallback to hardcoded project path
   - Skill remains functional for existing subcommands (setup, switch code, switch desktop)
 - Files: ~/.claude/skills/chrome-wsl/SKILL.md
-- Verify: `grep -q "chrome-wsl-health.sh" /home/tomcat65/.claude/skills/chrome-wsl/SKILL.md && grep -q "health" /home/tomcat65/.claude/skills/chrome-wsl/SKILL.md && exit 0 || exit 1`
+- Verify: `grep -q "chrome-wsl-health.sh" ~/.claude/skills/chrome-wsl/SKILL.md && grep -q "health" ~/.claude/skills/chrome-wsl/SKILL.md && exit 0 || exit 1`
 - Risk: medium
 - Max-iterations: 5
 - Scope: code
