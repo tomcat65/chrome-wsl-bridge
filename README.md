@@ -336,7 +336,7 @@ The skill looks for scripts via `$CHROME_WSL_BRIDGE_HOME` (defaults to `~/projec
 
 ## How It Was Built
 
-This project was built using the [SPECTRA methodology](https://github.com/anthropics/claude-code) -- a systematic approach to AI-driven software engineering with cross-model validation:
+This project was built using the [SPECTRA methodology](https://github.com/tomcat65/spectra) -- Systematic Planning, Execution via Clean-context loops, Tracking & verification with Real-time Agent orchestration. A unified AI-driven software engineering methodology with cross-model validation:
 
 1. **Discovery** (Haiku) -- Diagnosed the bridge, identified 10 fragility points across 4 risk clusters
 2. **Planning** (Opus) -- Designed a 9-task execution plan
